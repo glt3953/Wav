@@ -3,7 +3,7 @@
     window.URL = window.URL || window.webkitURL;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-    var HZRecorder = function (stream, config) {
+    var NXRecorder = function (stream, config) {
         config = config || {};
         config.sampleBits = config.sampleBits || 8;      //采样数位 8, 16
         config.sampleRate = config.sampleRate || (44100 / 6);   //采样率(1/6 44100)
@@ -159,47 +159,47 @@
 
     };
     //抛出异常
-    HZRecorder.throwError = function (message) {
+    NXRecorder.throwError = function (message) {
         alert(message);
         throw new function () { this.toString = function () { return message; } }
     }
     //是否支持录音
-    HZRecorder.canRecording = (navigator.getUserMedia != null);
+    NXRecorder.canRecording = (navigator.getUserMedia != null);
     //获取录音机
-    HZRecorder.get = function (callback, config) {
+    NXRecorder.get = function (callback, config) {
         if (callback) {
             if (navigator.getUserMedia) {
                 navigator.getUserMedia(
                     { audio: true } //只启用音频
                     , function (stream) {
-                        var rec = new HZRecorder(stream, config);
+                        var rec = new NXRecorder(stream, config);
                         callback(rec);
                     }
                     , function (error) {
                         switch (error.code || error.name) {
                             case 'PERMISSION_DENIED':
                             case 'PermissionDeniedError':
-                                HZRecorder.throwError('用户拒绝提供信息。');
+                                NXRecorder.throwError('用户拒绝提供信息。');
                                 break;
                             case 'NOT_SUPPORTED_ERROR':
                             case 'NotSupportedError':
-                                HZRecorder.throwError('浏览器不支持硬件设备。');
+                                NXRecorder.throwError('浏览器不支持硬件设备。');
                                 break;
                             case 'MANDATORY_UNSATISFIED_ERROR':
                             case 'MandatoryUnsatisfiedError':
-                                HZRecorder.throwError('无法发现指定的硬件设备。');
+                                NXRecorder.throwError('无法发现指定的硬件设备。');
                                 break;
                             default:
-                                HZRecorder.throwError('无法打开麦克风。异常信息:' + (error.code || error.name));
+                                NXRecorder.throwError('无法打开麦克风。异常信息:' + (error.code || error.name));
                                 break;
                         }
                     });
             } else {
-                HZRecorder.throwErr('当前浏览器不支持录音功能。'); return;
+                NXRecorder.throwErr('当前浏览器不支持录音功能。'); return;
             }
         }
     }
 
-    window.HZRecorder = HZRecorder;
+    window.NXRecorder = NXRecorder;
 
 })(window);
