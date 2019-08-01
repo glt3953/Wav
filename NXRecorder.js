@@ -34,6 +34,7 @@
                 }
                 //压缩
                 var compression = parseInt(this.inputSampleRate / this.outputSampleRate);
+//                console.log.apply(console, 'compression' + this.inputSampleRate + this.outputSampleRate);
                 var length = data.length / compression;
                 var result = new Float32Array(length);
                 var index = 0, j = 0;
@@ -49,7 +50,7 @@
                 var sampleBits = Math.min(this.inputSampleBits, this.oututSampleBits);
                 var bytes = this.compress();
                 var dataLength = bytes.length * (sampleBits / 8);
-                var buffer = new ArrayBuffer(44 + dataLength);
+                var buffer = new ArrayBuffer(44 + dataLength); // 头部数据为44字节
                 var data = new DataView(buffer);
 
                 var channelCount = 1;//单声道
@@ -61,6 +62,7 @@
                     }
                 }
 
+                // 增加头部44字节数据
                 // 资源交换文件标识符 
                 writeString('RIFF'); offset += 4;
                 // 下个地址开始到文件尾总字节数,即文件大小-8 
@@ -87,6 +89,7 @@
                 writeString('data'); offset += 4;
                 // 采样数据总数,即数据总大小-44 
                 data.setUint32(offset, dataLength, true); offset += 4;
+ 
                 // 写入采样数据 
                 if (sampleBits === 8) {
                     for (var i = 0; i < bytes.length; i++, offset++) {
